@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 import LoginErr from '../components/Loginerror';
 
@@ -25,7 +26,7 @@ export default function Login(props) {
     useEffect(() => {
         if (localStorage.getItem('token')) {
             router.push({
-                pathname: '/',
+                pathname: '/dashboard',
                 //query: { from: router.pathname },
           })
         } 
@@ -44,30 +45,25 @@ export default function Login(props) {
             data: data,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
             })
-            .then(function (response) {
-                let response = response.data;
-
-        
-                console.log(response);
+            .then(function (resp) {
+                let response = resp.data;
                 login_token = response['access_token'];
                 localStorage.setItem("token", response['access_token']);
                 localStorage.setItem("uId", response['user']['id']);
                 localStorage.setItem("auth", true);
                 updateAuth();
                 router.push({
-                    pathname: '/',
+                    pathname: '/dashboard',
                     //query: { from: router.pathname },
                 })
             })
             .catch(function (response) {
                 //handle error
                 updateLoginError();
-                console.log(response);
             });
     }
 
     return (
-        <div className="container mx-auto">
             <div className="text-center text-gray-800 flex flex-col justify-center items-center">
             
                 <h1 className="mt-6 text-4xl font-bold text-center text-gray-900">Login</h1>
@@ -104,11 +100,10 @@ export default function Login(props) {
                         </button>
                     </div>
                 </form>
-                    <div className="mt-5 text-sm text-center">
-                        Not a member? <a href="#" className="text-yellow-900">Register</a>
-                    </div>
+                <div className="mt-5 text-sm text-center">
+                    Not a member? <Link href="/register"><a className="text-yellow-900">Register</a></Link>
+                </div>
             </div>
-        </div>
     )
 
 }

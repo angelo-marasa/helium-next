@@ -10,13 +10,14 @@ export default function Home(props) {
 
   useEffect(() => {
     
+    
   },[]);
 
 
   return (
     <div>
       <h1 className="text-3xl font-bold underline">
-        Hello world!
+        Home Page
       </h1>
     </div>
   )

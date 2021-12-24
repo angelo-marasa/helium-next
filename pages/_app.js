@@ -17,10 +17,13 @@ function MyApp({ Component, pageProps }) {
 
 
   return (
-    <div className="container mx-auto">
+    <>
       <Navigation auth={auth} />  
-      <Component auth={auth} handler={handleAuth} {...pageProps} />
-    </div>
+      <div className="container mx-auto">
+        
+        <Component auth={auth} handler={handleAuth} {...pageProps} />
+      </div>
+    </>
   )
 }
 
