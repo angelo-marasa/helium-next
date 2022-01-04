@@ -167,7 +167,7 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
         if (showMe) {
             return (
                 <section className="animate-fade-in-down">
-                    <h2 className="text-2xl font-bold mt-6 font-Roboto font-medium">
+                    <h2 className="text-2xl font-bold mt-6 font-Roboto font-medium xs:ml-5 xm:ml-0">
                     {
                         edit ? <FontAwesomeIcon icon={faTrash} className="mr-3 hover:cursor-pointer" size="xs" onClick={() => deleteHotspot(hotspotID)}/> : ''
                     }
@@ -182,8 +182,8 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
                         }
 
                     </h2>
-                    <a href={`https://explorer.helium.com/hotspots/${hotspot.address}`}  target="_blank" rel="noreferrer" className="text-sm hover:text-gray-600"><FontAwesomeIcon icon={faGlobe} /> View on Explorer</a>
-                    <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat xs:invisible sm:visible">
+                    <a href={`https://explorer.helium.com/hotspots/${hotspot.address}`}  target="_blank" rel="noreferrer" className="text-sm hover:text-gray-600 xs:ml-5 xm:ml-0"><FontAwesomeIcon icon={faGlobe} /> View on Explorer</a>
+                    <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat xs:hidden sm:grid">
                         <div className="md:mt-6 sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">Today</h3>
                             <p>{(earningsToday).toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
