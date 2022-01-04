@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const SingleHotspot = (props) => {
-    const Router = useRouter()
-    const { address } = Router.query
+    const router = useRouter()
+    const { address } = router.query
     const [hotspotData, setHotspotData] = useState();
 
     function HandleHotspot(data) {
