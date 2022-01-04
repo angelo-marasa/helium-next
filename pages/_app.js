@@ -4,6 +4,8 @@ import Navigation from '../components/Navigation';
 
 function MyApp({ Component, pageProps }) {
   const [auth, setAuth] = useState();
+  const [apiDomain, setApiDomain] = useState('https://helium-geek-replica-backend.herokuapp.com/api');
+  const [heliumApiDomain, setHeliumApiDomain] = useState('https://helium-api.stakejoy.com/v1');
 
   function handleAuth(newVal) {
     setAuth(newVal);
@@ -21,7 +23,7 @@ function MyApp({ Component, pageProps }) {
       <Navigation auth={auth} />  
       <div className="container mx-auto">
         
-        <Component auth={auth} handler={handleAuth} {...pageProps} />
+        <Component auth={auth} handler={handleAuth} apiDomain={apiDomain} heliumApiDomain={heliumApiDomain} {...pageProps} />
       </div>
     </>
   )

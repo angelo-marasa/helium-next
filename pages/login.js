@@ -41,7 +41,7 @@ export default function Login(props) {
 
         axios({
             method: 'post',
-            url: API_URL+'login',
+            url: props.apiDomain+'/login',
             data: data,
             config: { headers: {'Content-Type': 'multipart/form-data' }}
             })

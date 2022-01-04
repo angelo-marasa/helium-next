@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faGlobe } from '@fortawesome/free-solid-svg-icons'
+import { faSatelliteDish } from '@fortawesome/free-solid-svg-icons'
 
-const Earnings = ({address, delay}) => {
+
+const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heliumApiDomain}) => {
     const [loading, setLoading] = useState(true);
     const [hotspot, setHotspot] = useState();
     const [earningsToday, setEarningsToday] = useState();
@@ -10,10 +15,17 @@ const Earnings = ({address, delay}) => {
     const [earningsSevenDays, setEarningsSevenDays] = useState();
     const [earningsThirtyDays, setEarningsThirtyDays] = useState();
     const [currentPrice, setCurrentPrice] = useState();
+    const [lastActive, setLastActive] = useState();
+    const [showMe, setShowMe] = useState(true);
 
     function handleLoading() {
         setLoading(false);
     }
+
+    function handleLastActive(last, block) {
+        setLastActive(block - last);
+    }
+
     function handleCurrentPrice(price) {
         setCurrentPrice((price / 100000000));
     }
@@ -29,6 +41,7 @@ const Earnings = ({address, delay}) => {
         setEarningsThirtyDays(thirtyDay);
     }
 
+
     function capitalizeTheFirstLetterOfEachWord(words) {
         var separateWord = words.toLowerCase().split(' ');
         for (var i = 0; i < separateWord.length; i++) {
@@ -37,13 +50,48 @@ const Earnings = ({address, delay}) => {
         }
         return separateWord.join(' ');
      }
+
+     function deleteHotspot(id) {
+        var data = {
+            'id': id 
+          };
+        var config = {
+            method: 'post',
+            url: `${apiDomain}/hotspot/delete`,
+            headers: { 
+              'Accept': 'application/json', 
+              'Authorization':  `Bearer ${ localStorage.getItem('token') }`,
+              'Content-Type': 'application/json'
+            },
+            data : data
+          };
+          
+          axios(config)
+          .then(function (response) {
+              if (response.data['deleted'] == true) {
+                  setShowMe(false);
+              }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        // editHandler();
+     }
+
+     function getDataFromAPI() {
+        axios.get(`${heliumApiDomain}/hotspots/${address}`)
+        .then(res => {
+            handleLastActive(res.data.data.last_change_block, res.data.data.block);
+        });
+     }
     
     useEffect(() => {
-        axios.get(`https://helium-api.stakejoy.com/v1/hotspots/${address}`)
+        axios.get(`${heliumApiDomain}/hotspots/${address}`)
         .then(res => {
             handleHotspot(res.data.data);
-            
-            axios.get(`https://api.helium.io/v1/hotspots/${address}/rewards/sum?min_time=-30%20day&bucket=day`)
+            handleLastActive(res.data.data.last_change_block, res.data.data.block);
+            axios.get(`${heliumApiDomain}/hotspots/${address}/rewards/sum?min_time=-30%20day&bucket=day`)
             .then(res => {
                 let todaysEarnings = 0;
                 let yesterday = 0;
@@ -70,7 +118,7 @@ const Earnings = ({address, delay}) => {
         
                 var config = {
                     method: 'get',
-                    url: `https://helium-api.stakejoy.com/v1/hotspots/${address}/rewards?min_time=${minTime.toISOString()}&max_time=${maxTime.toISOString()}`,
+                    url: `${heliumApiDomain}/hotspots/${address}/rewards?min_time=${minTime.toISOString()}&max_time=${maxTime.toISOString()}`,
                     headers: { }
                   };
                   
@@ -79,7 +127,7 @@ const Earnings = ({address, delay}) => {
                       let cursor = response.data['cursor'];
                       var config = {
                         method: 'get',
-                        url: `https://helium-api.stakejoy.com/v1/hotspots/${address}/rewards?min_time=${minTime.toISOString()}&max_time=${maxTime.toISOString()}&cursor=${cursor}`,
+                        url: `${heliumApiDomain}/hotspots/${address}/rewards?min_time=${minTime.toISOString()}&max_time=${maxTime.toISOString()}&cursor=${cursor}`,
                         headers: { }
                       };
                       
@@ -95,7 +143,7 @@ const Earnings = ({address, delay}) => {
                       })
                   })
                   
-                axios.get(`https://helium-api.stakejoy.com/v1/oracle/prices/current`)
+                axios.get(`${heliumApiDomain}/oracle/prices/current`)
                     .then(res => {
                         handleCurrentPrice(res.data.data['price']);
                          setTimeout(function() {
@@ -104,6 +152,10 @@ const Earnings = ({address, delay}) => {
                     })
                 
             })
+
+            const timerId = setInterval(() => {
+                getDataFromAPI();
+             }, 60000);
         })
 
 
@@ -112,40 +164,55 @@ const Earnings = ({address, delay}) => {
     },[]);
 
     if (!loading) {
-    return (
-        <section className="animate-fade-in-down">
-            <h2 className="text-2xl font-bold mt-10 font-Roboto font-medium">
-                <Link href={`/hotspot/${hotspot.address}`}>{capitalizeTheFirstLetterOfEachWord(hotspot.name.replace(/-/g, " "))}</Link>
-                <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-orange-600 bg-orange-200 uppercase first: ml-3 last:mr-0 mr-1">
-                    Home
-                </span>
-            </h2>
+        if (showMe) {
+            return (
+                <section className="animate-fade-in-down">
+                    <h2 className="text-2xl font-bold mt-6 font-Roboto font-medium">
+                    {
+                        edit ? <FontAwesomeIcon icon={faTrash} className="mr-3 hover:cursor-pointer" size="xs" onClick={() => deleteHotspot(hotspotID)}/> : ''
+                    }
+                        <span className="hover:text-gray-600"><Link href={`/hotspot/${hotspot.address}`}>{capitalizeTheFirstLetterOfEachWord(hotspot.name.replace(/-/g, " "))}</Link></span>
+                        { lastActive < 120 ? 
+                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200 uppercase ml-3">
+                                <FontAwesomeIcon icon={faSatelliteDish} /> {lastActive} blocks
+                            </span> :
+                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-orange-600 bg-orange-200 uppercase ml-3">
+                                <FontAwesomeIcon icon={faSatelliteDish} /> {lastActive} blocks
+                            </span>
+                        }
 
-            <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat">
-                <div className="md:mt-10 sm:mt-5">
-                    <h3 className="text-2xl leading-relaxed">Today</h3>
-                    <p>{earningsToday.toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
-                    <p>${(earningsToday * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
-                </div>
-                <div className="md:mt-10 sm:mt-5">
-                    <h3 className="text-2xl leading-relaxed">Yesterday</h3>
-                    <p>{earningsYesterday.toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
-                    <p>${(earningsYesterday * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
-                </div>
-                <div className="md:mt-10 sm:mt-5">
-                    <h3 className="text-2xl leading-relaxed">7 Days</h3>
-                    <p>{earningsSevenDays.toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
-                    <p>${(earningsSevenDays * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
-                </div>
-                <div className="md:mt-10 sm:mt-5">
-                    <h3 className="text-2xl leading-relaxed">30 Days</h3>
-                    <p>{earningsThirtyDays.toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
-                    <p>${(earningsThirtyDays * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
-                </div>
-            </div>
-            <hr className="mt-10" />
-        </section>
-        )
+                    </h2>
+                    <a href={`https://explorer.helium.com/hotspots/${hotspot.address}`}  target="_blank" className="text-sm hover:text-gray-600"><FontAwesomeIcon icon={faGlobe} /> View on Explorer</a>
+                    <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat">
+                        <div className="md:mt-6 sm:mt-5">
+                            <h3 className="text-2xl leading-relaxed">Today</h3>
+                            <p>{earningsToday.toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsToday * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
+                        </div>
+                        <div className="md:mt-6 sm:mt-5">
+                            <h3 className="text-2xl leading-relaxed">Yesterday</h3>
+                            <p>{earningsYesterday.toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsYesterday * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
+                        </div>
+                        <div className="md:mt-6 sm:mt-5">
+                            <h3 className="text-2xl leading-relaxed">7 Days</h3>
+                            <p>{earningsSevenDays.toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsSevenDays * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
+                        </div>
+                        <div className="md:mt-6sm:mt-5">
+                            <h3 className="text-2xl leading-relaxed">30 Days</h3>
+                            <p>{earningsThirtyDays.toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsThirtyDays * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
+                        </div>
+                    </div>
+                    <hr className="mt-6" />
+                </section>
+                )
+            } else {
+                return(
+                   <></>
+                )
+            }
     } else { 
         return (
             <div className="relative pt-1 animate-pulse mt-10 h-48">

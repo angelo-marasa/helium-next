@@ -18,8 +18,8 @@ const logout = (props) => {
 
         let result = axios( {
             method:'post',
-            url: 'logout',
-            baseURL: API_URL,
+            url: '/logout',
+            baseURL: props.apiDomain,
             data: JSON.stringify({}),
             headers: headers,
         } );

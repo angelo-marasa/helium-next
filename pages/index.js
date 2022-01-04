@@ -19,6 +19,9 @@ export default function Home(props) {
       <h1 className="text-3xl font-bold underline">
         Home Page
       </h1>
+      <p>
+        Nothing here yet, but coming soon! Ideas? Tell me.
+      </p>
     </div>
   )
 }

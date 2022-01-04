@@ -38,7 +38,7 @@ const register = (props) => {
 
         axios({
             method: 'post',
-            url: API_URL+'register',
+            url: props.apiDomain+'/register',
             data: data,
             config: { headers: {'Accept': 'application/json' }}
             })
