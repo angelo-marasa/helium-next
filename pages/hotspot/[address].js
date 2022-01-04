@@ -4,7 +4,7 @@ import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
-const singleHotspot = (props) => {
+const SingleHotspot = (props) => {
     const Router = useRouter()
     const { address } = Router.query
     const [hotspotData, setHotspotData] = useState();
@@ -55,4 +55,4 @@ const singleHotspot = (props) => {
     
 }
 
-export default singleHotspot
+export default SingleHotspot

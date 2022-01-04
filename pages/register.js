@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 const API_URL = "https://helium-backend.loc/api/";
 
 
-const register = (props) => {
+const Register = (props) => {
     const router = useRouter();
 
     let [ email, setEmail ] = useState('');
@@ -115,4 +115,4 @@ const register = (props) => {
     )
 }
 
-export default register
+export default Register

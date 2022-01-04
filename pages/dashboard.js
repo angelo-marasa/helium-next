@@ -43,9 +43,6 @@ const Dashboard = (props) => {
         setEdit(!edit);
     }
 
-    function deleteHotspot() {
-        
-    }
   
     if (!loading) {
         return (

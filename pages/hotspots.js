@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 
-const hotspots = (props) => {
+const Hotspots = (props) => {
     const [modal, setModal] = useState(false);
     const [address, setAddress] = useState();
 
@@ -47,7 +47,7 @@ const hotspots = (props) => {
             <h1 className="text-3xl font-bold underline font-Roboto">
                 My Hotspots
             </h1>
-            <p className="font-Montserrat">I don't know what will go here yet, so this is temporary!</p>
+            <p className="font-Montserrat">I don&lsquo;t know what will go here yet, so this is temporary!</p>
             
             <div id="add-hotspot" className="mt-5 font-Montserrat cursor-pointer" onClick={handleModal}>
                 <FontAwesomeIcon icon={faPlusCircle} /> Add New Hotspot
@@ -90,4 +90,4 @@ const hotspots = (props) => {
     )
 }
 
-export default hotspots
+export default Hotspots

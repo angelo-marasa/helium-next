@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router';
 
 const API_URL = "https://helium-backend.loc/api/";
-const logout = (props) => {
+const Logout = (props) => {
     const router = useRouter();
 
     const updateAuth = () => {
@@ -42,4 +42,4 @@ const logout = (props) => {
     )
 }
 
-export default logout
+export default Logout
