@@ -183,7 +183,7 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
 
                     </h2>
                     <a href={`https://explorer.helium.com/hotspots/${hotspot.address}`}  target="_blank" rel="noreferrer" className="text-sm hover:text-gray-600"><FontAwesomeIcon icon={faGlobe} /> View on Explorer</a>
-                    <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat">
+                    <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat sm:invisible">
                         <div className="md:mt-6 sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">Today</h3>
                             <p>{(earningsToday).toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
