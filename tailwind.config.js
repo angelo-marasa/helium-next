@@ -8,6 +8,10 @@ module.exports = {
       Roboto: ["Roboto", "serif"],
       Montserrat: ["Montserrat", "serif"],
      },
+     screens: {
+        'xs': '475px',
+        ...defaultTheme.screens,
+      },
      extend: {
       keyframes: {
           'fade-in-down': {
