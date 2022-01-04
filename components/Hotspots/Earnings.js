@@ -186,23 +186,23 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
                     <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat">
                         <div className="md:mt-6 sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">Today</h3>
-                            <p>{earningsToday}<sup className="align-text-middle">HNT</sup></p>
-                            <p>${(earningsToday * currentPrice)} <sup className="align-text-middle">USD</sup></p>
+                            <p>{(earningsToday).toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsToday * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
                         </div>
                         <div className="md:mt-6 sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">Yesterday</h3>
-                            <p>{earningsYesterday}<sup className="align-text-middle">HNT</sup></p>
-                            <p>${(earningsYesterday * currentPrice)}<sup className="align-text-middle">USD</sup></p>
+                            <p>{(earningsYesterday).toFixed(2)}<sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsYesterday * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
                         </div>
                         <div className="md:mt-6 sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">7 Days</h3>
-                            <p>{earningsSevenDays} <sup className="align-text-middle">HNT</sup></p>
-                            <p>${(earningsSevenDays * currentPrice)}<sup className="align-text-middle">USD</sup></p>
+                            <p>{(earningsSevenDays).toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsSevenDays * currentPrice).toFixed(2)}<sup className="align-text-middle">USD</sup></p>
                         </div>
                         <div className="md:mt-6sm:mt-5">
                             <h3 className="text-2xl leading-relaxed">30 Days</h3>
-                            <p>{earningsThirtyDays} <sup className="align-text-middle">HNT</sup></p>
-                            <p>${(earningsThirtyDays * currentPrice)} <sup className="align-text-middle">USD</sup></p>
+                            <p>{(earningsThirtyDays).toFixed(2)} <sup className="align-text-middle">HNT</sup></p>
+                            <p>${(earningsThirtyDays * currentPrice).toFixed(2)} <sup className="align-text-middle">USD</sup></p>
                         </div>
                     </div>
                     <hr className="mt-6" />
