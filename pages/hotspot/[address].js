@@ -5,15 +5,15 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const singleHotspot = (props) => {
-    const router = useRouter()
-    const { address } = router.query
+    const Router = useRouter()
+    const { address } = Router.query
     const [hotspotData, setHotspotData] = useState();
 
-    function handleHotspot(data) {
+    function HandleHotspot(data) {
         setHotspotData(data);
     }
 
-    function capitalizeTheFirstLetterOfEachWord(words) {
+    function CapitalizeTheFirstLetterOfEachWord(words) {
         var separateWord = words.toLowerCase().split(' ');
         for (var i = 0; i < separateWord.length; i++) {
            separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
@@ -29,7 +29,7 @@ const singleHotspot = (props) => {
           console.log('my query exists!!', address);
             axios.get(`${props.heliumApiDomain}/hotspots/${address}`)
             .then(res => {
-                handleHotspot(res.data.data.name);
+                HandleHotspot(res.data.data.name);
             })
     },[address]);
 
@@ -39,7 +39,7 @@ const singleHotspot = (props) => {
                 <>
                     <p className="cursor-pointer" onClick={() => router.back()}><FontAwesomeIcon icon={faAngleDoubleLeft} /> Back</p>
                     <h1 className="text-3xl font-bold">
-                        {capitalizeTheFirstLetterOfEachWord(hotspotData.replace(/-/g, " "))}
+                        {CapitalizeTheFirstLetterOfEachWord(hotspotData.replace(/-/g, " "))}
                     </h1>
                     <p>
                         More coming soon.
