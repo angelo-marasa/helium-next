@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { faSatelliteDish } from '@fortawesome/free-solid-svg-icons'
+import { faPlug } from '@fortawesome/free-solid-svg-icons'
 
 
 const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heliumApiDomain}) => {
@@ -17,6 +18,11 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
     const [currentPrice, setCurrentPrice] = useState();
     const [lastActive, setLastActive] = useState();
     const [showMe, setShowMe] = useState(true);
+    const [status, setStatus] = useState();
+
+    function handleStatus(val) {
+        setStatus(val);
+    }
 
     function handleLoading() {
         setLoading(false);
@@ -89,7 +95,9 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
     useEffect(() => {
         axios.get(`${heliumApiDomain}/hotspots/${address}`)
         .then(res => {
+            console.log(res.data.data);
             handleHotspot(res.data.data);
+            handleStatus(res.data.data.status.online);
             handleLastActive(res.data.data.last_change_block, res.data.data.block);
             axios.get(`${heliumApiDomain}/hotspots/${address}/rewards/sum?min_time=-30%20day&bucket=day`)
             .then(res => {
@@ -171,7 +179,17 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
                     {
                         edit ? <FontAwesomeIcon icon={faTrash} className="mr-3 hover:cursor-pointer" size="xs" onClick={() => deleteHotspot(hotspotID)}/> : ''
                     }
-                        <span className="hover:text-gray-600"><Link href={`/hotspot/${hotspot.address}`}>{capitalizeTheFirstLetterOfEachWord(hotspot.name.replace(/-/g, " "))}</Link></span>
+
+                <span className="hover:text-gray-600"><Link href={`/hotspot/${hotspot.address}`}>{capitalizeTheFirstLetterOfEachWord(hotspot.name.replace(/-/g, " "))}</Link></span>
+                        { status === 'online' ? 
+                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200 uppercase ml-3">
+                                <FontAwesomeIcon icon={faPlug} /> Online
+                            </span> :
+                            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-red-600 bg-red-200 uppercase ml-3">
+                                <FontAwesomeIcon icon={faPlug} className="rotate-180"/> Offline
+                            </span>
+                        }
+
                         { lastActive < 120 ? 
                             <span className="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-emerald-600 bg-emerald-200 uppercase ml-3">
                                 <FontAwesomeIcon icon={faSatelliteDish} /> {lastActive} blocks
@@ -180,7 +198,6 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
                                 <FontAwesomeIcon icon={faSatelliteDish} /> {lastActive} blocks
                             </span>
                         }
-
                     </h2>
                     <a href={`https://explorer.helium.com/hotspots/${hotspot.address}/activity`}  target="_blank" rel="noreferrer" className="text-sm hover:text-gray-600 xs:ml-5 xm:ml-0"><FontAwesomeIcon icon={faGlobe} /> View on Explorer</a>
                     <div className="grid gap-4 md:grid-cols-4 sm:grid-cols-2 font-Montserrat xs:hidden sm:grid">
