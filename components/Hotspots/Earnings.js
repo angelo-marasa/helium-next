@@ -156,6 +156,10 @@ const Earnings = ({address, hotspotID, delay, editHandler, edit, apiDomain, heli
                         handleCurrentPrice(res.data.data['price']);
                          setTimeout(function() {
                             handleLoading();
+                            const thorPrice = await axios.get(`https://thor-discordpricingbot.herokuapp.com/`);
+                            const heliumPrice = await axios.get(`https://helium-discordpricebot.herokuapp.com/`);
+                            const planetsPrice = await axios.get(`https://planets-discordpricebot.herokuapp.com/`);
+
                         }, delay * 1000);
                     })
                 
